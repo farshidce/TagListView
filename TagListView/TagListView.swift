@@ -180,7 +180,7 @@ open class TagListView: UIView {
         }
     }
     
-    open var textFont: UIFont = UIFont.systemFont(ofSize: 12) {
+    @IBInspectable open var textFont: UIFont = UIFont.systemFont(ofSize: 12) {
         didSet {
             for tagView in tagViews {
                 tagView.textFont = textFont
@@ -333,7 +333,7 @@ open class TagListView: UIView {
     
     open func removeTagView(_ tagView: TagView) {
         tagView.removeFromSuperview()
-        if let index = tagViews.index(of: tagView) {
+        if let index = tagViews.firstIndex(of: tagView) {
             tagViews.remove(at: index)
             tagBackgroundViews.remove(at: index)
         }

@@ -93,12 +93,12 @@ open class TagView: UIButton {
         else if isSelected {
             backgroundColor = selectedBackgroundColor ?? tagBackgroundColor
             layer.borderColor = selectedBorderColor?.cgColor ?? borderColor?.cgColor
-            setTitleColor(selectedTextColor, for: UIControlState())
+            setTitleColor(selectedTextColor, for: UIControl.State())
         }
         else {
             backgroundColor = tagBackgroundColor
             layer.borderColor = borderColor?.cgColor
-            setTitleColor(textColor, for: UIControlState())
+            setTitleColor(textColor, for: UIControl.State())
         }
     }
     
@@ -157,7 +157,7 @@ open class TagView: UIButton {
     
     public init(title: String) {
         super.init(frame: CGRect.zero)
-        setTitle(title, for: UIControlState())
+        setTitle(title, for: UIControl.State())
         
         setupView()
     }
@@ -171,7 +171,7 @@ open class TagView: UIButton {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress))
         self.addGestureRecognizer(longPress)
     }
-    func longPress (){
+    @objc func longPress (){
         if onLongPress != nil {
             onLongPress!(self)
         }
@@ -179,7 +179,7 @@ open class TagView: UIButton {
     // MARK: - layout
 
     override open var intrinsicContentSize: CGSize {
-        var size = titleLabel?.text?.size(attributes: [NSFontAttributeName: textFont]) ?? CGSize.zero
+        var size = titleLabel?.text?.size(withAttributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): textFont])) ?? CGSize.zero
         size.height = textFont.pointSize + paddingY * 2
         size.width += paddingX * 2
         if enableRemoveButton {
@@ -206,4 +206,15 @@ open class TagView: UIButton {
             removeButton.frame.origin.y = 0
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }
